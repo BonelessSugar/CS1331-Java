@@ -1,1 +1,163 @@
-
+import java.util.Scanner;
+public class Battleship {
+	public static char[][] emptyBoard() {
+		char[][] array2d = new char[5][5];
+		for (int X = 0; X < 5; X++) {
+			for (int Y = 0; Y < 5; Y++) {
+				array2d[X][Y] = '-';
+			}
+		}
+		return array2d;
+	}
+  
+	public static void printBoard(char[][] 
+			array2d) {
+		System.out.println();
+		System.out.println(array2d[0]);
+		System.out.println(array2d[1]);
+		System.out.println(array2d[2]);
+		System.out.println(array2d[3]);
+		System.out.println(array2d[4]);
+		System.out.println();
+	}
+  
+	public static void newShip(char[][] board, String player, String whichShip) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Player " + player + ", enter " + whichShip + 
+				" ship coordinates. ex: 0 3");
+		int xVal = input.nextInt();
+		int yVal = input.nextInt();
+		//if invalid integers,
+		//print "Coordinates out of range. Choose different coordinates."
+		if (xVal > 4 || yVal > 4) {
+			System.out.println("Coordinates out of range. "
+					+ "Choose different coordinates.");
+			newShip(board, player, whichShip);
+		}
+		//if coord already entered,
+		//print "You already have a ship there. Choose different coordinates."
+		else if (board[xVal][yVal] == '@') {
+			System.out.println("You already have a ship there. "
+					+ "Choose different coordinates.");
+			newShip(board, player, whichShip);
+		}
+		else {
+			board[xVal][yVal] = '@';
+		}
+	}
+  
+	public static int hitAttack(char[][] targetBoard, char[][] oppoBoard,
+			String player, String opponent, int oneShipCount, int twoShipCount) {
+		Scanner input = new Scanner(System.in);
+		System.out.println();
+		System.out.println("Player " + player + ", enter a coordinate to fire upon. ex: 0 3");
+		int xTarget = input.nextInt();
+		int yTarget = input.nextInt();
+		//if invalid integers,
+		//print "Coordinates out of range. Choose different coordinates."
+		if (xTarget > 4 || yTarget > 4) {
+			System.out.println("Coordinates out of range. "
+					+ "Choose different coordinates.");
+			return hitAttack(targetBoard, oppoBoard, player, opponent, oneShipCount, twoShipCount);
+		}
+		//if coords already entered,
+		//print "You already fired on this spot. Choose different coordinates."
+		else if (targetBoard[xTarget][yTarget] == 'X' || 
+				targetBoard[xTarget][yTarget] == 'O') {
+			System.out.println("You already fired on this spot. "
+					+ "Choose different coordinates.");
+			return hitAttack(targetBoard, oppoBoard, player, opponent, oneShipCount, twoShipCount);
+		}
+		//if coord = no ship,
+		//print "PLAYER [NUM] MISSED!"
+		//update target board
+		//print target board
+		else if (oppoBoard[xTarget][yTarget] == '-') {
+			System.out.println("PLAYER " + player.toUpperCase() + " MISSED!");
+			targetBoard[xTarget][yTarget] = 'O';
+			printBoard(targetBoard);
+			if (player == "One") {
+				return twoShipCount;
+			}
+			else {
+				return oneShipCount;
+			}
+		}
+		//if coord = ship,
+		//print "PLAYER [NUM A] HIT PLAYER [NUM B]'s SHIP!"
+		//update target board
+		//update shipCount
+		//print target board
+		else {
+			System.out.println("PLAYER " + player.toUpperCase() + " HIT PLAYER "
+					+ opponent.toUpperCase() + "'S SHIP!");
+			targetBoard[xTarget][yTarget] = 'X';
+			printBoard(targetBoard);
+			if (player == "One") {
+				twoShipCount -= 1;
+				return twoShipCount;
+			}
+			else {
+				oneShipCount -= 1;
+				return oneShipCount;
+			}
+		}
+	}
+  
+	public static void main(String[] args) {
+		System.out.println("Welcome to Battleship!");
+		//create empty board 1 (player board)
+		//5x5 grid filled with '-'
+		char[][] oneBoard = emptyBoard();
+		
+		//create empty board 2
+		char[][] twoBoard = emptyBoard();
+		
+		//have player 1 put in battleships
+		//battleships have length of 1
+		//battleships = '@'
+		//prompt 5 times
+		//after all ships entered, print board
+		newShip(oneBoard, "One", "first");
+		newShip(oneBoard, "One", "second");
+		newShip(oneBoard, "One", "third");
+		newShip(oneBoard, "One", "fourth");
+		newShip(oneBoard, "One", "fifth");
+		printBoard(oneBoard);
+		
+		//have player 2 put in battleships
+		newShip(twoBoard, "Two", "first");
+		newShip(twoBoard, "Two", "second");
+		newShip(twoBoard, "Two", "third");
+		newShip(twoBoard, "Two", "fourth");
+		newShip(twoBoard, "Two", "fifth");
+		printBoard(twoBoard);
+		
+		//create empty board 3 (target board of player one's moves
+		//against player two)
+		char[][] oneTarget = emptyBoard();
+		//create empty board 4
+		char[][] twoTarget = emptyBoard();
+		//after each action, print target board
+		//'-' = empty space
+		//'@' = ship
+		//'X' = hit ship
+		//'O' = hit empty
+		
+		//use recursion to play the game until ships are all sunk
+		int oneShipCount = 5;
+		int twoShipCount = 5;
+		while (oneShipCount > 0 && twoShipCount > 0) {
+			//prompt player 1 to fire
+			twoShipCount = hitAttack(oneTarget, twoBoard, "One", "Two", oneShipCount, twoShipCount);
+			//prompt player 2 to fire
+			oneShipCount = hitAttack(twoTarget, oneBoard, "Two", "One", oneShipCount, twoShipCount);
+		}
+		if (oneShipCount == 0) {
+			System.out.println("PLAYER ONE WINS! YOU SUNK ALL OF YOUR OPPONENT’S SHIPS!");
+		}
+		else {
+			System.out.println("PLAYER TWO WINS! YOU SUNK ALL OF YOUR OPPONENT’S SHIPS!");
+		}
+	}
+}
