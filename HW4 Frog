@@ -1,0 +1,86 @@
+public class Frog extends Pond{
+	//private all variables
+	private String name;
+	private int age;
+	private double tongueSpeed;
+	private boolean isFroglet;
+	private static String species = "Rare Pepe";
+	public Frog(String name, int age, double tongueSpeed) {
+		this.name = name;
+		this.age = age;
+		this.tongueSpeed = tongueSpeed;
+		if (age > 1 && age < 7) {
+			isFroglet = true;
+		}
+	}
+	public Frog(String name, double ageInYears, double tongueSpeed) {
+		this(name, (int) (ageInYears * 12), tongueSpeed);
+		if (age > 1 && age < 7) {
+			isFroglet = true;
+		}
+	}
+	public Frog(String name) {
+		this(name, 5, 5);
+		if (age > 1 && age < 7) {
+			isFroglet = true;
+		}	
+	}
+	public void grow(int months) {
+		while (months > 0) {
+			if (age < 12) {
+				tongueSpeed++;
+			}
+			else if (age >= 30) {
+				tongueSpeed--;
+			}
+			age++;
+			months--;
+		}
+		if (age > 1 && age < 7) {
+			isFroglet = true;
+		}
+	}
+	public void grow() {
+		if (age < 12) {
+			tongueSpeed++;
+		}
+		else if (age >= 30) {
+			tongueSpeed--;
+		}
+		age++;
+		if (age > 1 && age < 7) {
+			isFroglet = true;
+		}
+	}
+	public void eat(Fly fly) {
+		if (!fly.isDead()) {
+			if (tongueSpeed > fly.getSpeed()) {
+				if (fly.getMass() >= (age * 0.5)) {
+					grow();
+					fly.setMass(0);
+				}
+			}
+			else {
+				fly.grow(1);
+			}
+		}
+	}
+	public String toString() {
+		if (isFroglet) {
+			return "My name is " + name + " and I'm a rare froglet! "
+					+ "I'm " + age + " months old and my tongue "
+					+ "has a speed of " + tongueSpeed + ".";
+		}
+		else {
+			return "My name is " + name + " and I'm a rare frog. "
+					+ "I'm " + age + " months old and my tongue "
+					+ "has a speed of " + tongueSpeed + ".";
+		}
+	}
+	public String getSpecies() {
+		return species;
+	}
+	public void setSpecies(String species) {
+		this.species = species;
+	}
+}
