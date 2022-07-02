@@ -1,0 +1,58 @@
+public class TestDriver {
+	public static void main(String[] args) {
+		/*
+		Pet testPet = new Pet("Frank",0.5,4);
+		System.out.println(testPet.getHealth());
+		System.out.println(testPet.getPainLevel());
+		Pet testyPet = new Pet("Frank",12,90);
+		System.out.println(testyPet.getHealth());
+		System.out.println(testyPet.getPainLevel());
+		testyPet.speak();
+		testPet.speak();
+		testPet.heal();
+		System.out.println(testPet.getHealth());
+		System.out.println(testPet.getPainLevel());
+		System.out.println(testPet.equals(testyPet));
+		*/
+		//Pet works
+		/*
+		Dog testDog = new Dog("Frank",0.5,12,12.0);
+		System.out.println(testDog.getDroolRate());
+		System.out.println(testDog.getHealth());
+		System.out.println(testDog.getPainLevel());
+		Dog testyDog = new Dog("Frank2",2.0,12,0);
+		System.out.println(testDog.equals(testyDog));
+		System.out.println(testDog.treat());
+		//10,0.5
+		//10*2 / 0.5
+		//40
+		testDog.speak();
+		testyDog.speak();
+		*/
+		//Dog works
+		/*
+		Cat testCat = new Cat("Ralph",2.0,12,20);
+		System.out.println(testCat.getMiceCaught());
+		System.out.println(testCat.getHealth());
+		System.out.println(testCat.getPainLevel());
+		Cat testyCat = new Cat("Ralph",2.0,12,20);
+		System.out.println(testCat.equals(testyCat));
+		System.out.println(testCat.treat());
+		//10,0.5
+		//10*2 / 0.5
+		//40
+		testCat.speak();
+		testyCat.speak();
+		*/
+		//Cat works
+		//InvalidPetException works
+		
+		//NOW TEST CLINIC, the problem child
+		//constructors work
+		//nextDay works
+		//addTime works
+		//addToFile doesn't work
+		//fixed, was rewriting whole file instead of appending
+		//just needed the ,true part to the FileWriter
+	}
+}
