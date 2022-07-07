@@ -1,0 +1,227 @@
+import java.util.NoSuchElementException;
+public class LinkedList<T> implements List<T> {
+	//consists of nodes linked to each other with pointers
+	//implements List interface
+	//use abstract methods provided in interface
+	//implement methods and adjust variables and pointers
+	//generic class
+	
+	//represents head of LinkedList
+	//if list is empty, set value to null
+	private Node<T> head;
+	//represents tail of LinkedList
+	//if list is empty, set value to null
+	private Node<T> tail;
+	//represents current size of LinkedList
+	//if list is empty, set value to 0
+	private int size;
+	//a no-args constructor setting head and tail to null
+	public LinkedList() {
+		//why use this. instead of nothing?
+		this.head = null;
+		this.tail = null;
+	}
+	//getters for head and tail
+	public Node<T> getHead() {
+		return head;
+	}
+	public Node<T> getTail() {
+		return tail;
+	}
+	//override all necessary methods to implement List<T> interface
+	public void addAtIndex(T data, int index) {
+		//if index is neg or larger than size,
+		if (index < 0 || index > size) {
+			//throw IllegalArgumentException
+			throw new IllegalArgumentException("Your index is out of the list bounds");
+		}
+		//if passed data is null,
+		else if (data == null) {
+			//throw IllegalArgumentException
+			throw new IllegalArgumentException("You cannot add null data to the list");
+		}
+		
+		Node<T> zNode = new Node(data);
+		Node<T> cNode = head;
+		//if there is no list already
+		if (isEmpty()) {
+			//update head
+			head = zNode;
+			//update tail
+			tail = zNode;
+		}
+		//if index is the first item
+		//of a list that already exists
+		else if (index == 0) {
+			//point z to head
+			zNode.setNext(cNode);
+			//update head to equal z
+			head = zNode;
+		}
+		//if index is the last item
+		else if (index == size) {
+			//go through list until you hit last node
+			while (cNode.getNext() != null) {
+				cNode = cNode.getNext();
+			}
+			//set c.next to z
+			cNode.setNext(zNode);
+			//update tail to equal z
+			tail = zNode;
+		} else {
+			//if index isnt last or first
+		
+			/*
+			 * A B C D E F G
+			 * add Z between C and D:
+			 * create z node with input data
+			 * Node<T> zNode = new Node(data);
+			 * Node<T> cNode = head;
+			 * set z next to d, because can have multiple nodes point to one node
+			 * set c next to z
+			 */
+			//find C (index - 1)
+			for (int i = 0; i < index - 1; i++) {
+				cNode = cNode.getNext();
+			}
+			//set z.next to d
+			zNode.setNext(cNode.getNext());
+			//set c.next to z
+			cNode.setNext(zNode);
+		}
+		//adjust size
+		size++;
+	}
+	public T getAtIndex(int index) {
+		//if index is neg or larger than size - 1,
+		if (index < 0 || index > size - 1) {
+			throw new IllegalArgumentException("Your index is out of the list bounds");
+		}
+		//returns data located at specified index in list
+		Node<T> current = head;
+		for (int i = 0; i < index; i++) {
+			current = current.getNext();
+		}
+		return current.getData();
+	}
+	public T removeAtIndex(int index) {
+		//removes data and node from specified index of list
+		//returns the data that was removed
+		//if index is neg or larger than size - 1,
+		if (index < 0 || index > size - 1) {
+			throw new IllegalArgumentException("Your index is out of bounds");
+		}
+		
+		//if index = 0
+			//if size = 0
+				//cant exist because throw exception
+			//if size = 1
+			//as in, if only head exists
+			//remove head
+		if (index == 0) {
+			T removedData = head.getData();
+			if (size == 1) {
+				head = null;
+				tail = null;
+			}
+			//if size = 2
+			else {
+				head = head.getNext();
+			}
+			size--;
+			return removedData;
+		}
+		
+		//first, go to the node (3) you want to remove
+		Node<T> removeNode = head;
+		Node<T> prevNode = null;
+		for (int i = 0; i < index; i++) {
+			prevNode = removeNode;
+			removeNode = removeNode.getNext();
+		}
+		//if index is last item in list, update tail and exit
+		if (index == size - 1) {
+			prevNode.setNext(null);
+			tail = prevNode;
+			size--;
+			return removeNode.getData();
+		}
+		//...then, set 2 node pointer to 4 (3.getnext)
+		prevNode.setNext(removeNode.getNext());
+		size--;
+		//return node 3 data
+		return removeNode.getData();
+		//adjust for head, tail, size accordingly
+	}
+	public T remove(T data) {
+		//if data looking for is null, throw exception
+		if (data == null) {
+			throw new IllegalArgumentException("You cannot remove null data from the list");
+		}
+		//removes first occurrence of passed data and node from list
+		T removedData;	
+		//returns removed data
+		//if there is no data in list
+		if (isEmpty()) {
+			return null;
+		}
+		//if there is only one data in list
+		else if (head.getNext() == null) {
+			if (head.getData() == data) {
+				removedData = head.getData();
+				head = null;
+				tail = null;
+				size--;
+				return removedData;
+			}
+			else {
+				//if data wasnt the only data in the list, throw exception
+				throw new NoSuchElementException("The data is not present in the list");
+			}
+		}
+		//if list is bigger than 1 data
+		else {
+			//go through list until you find the data
+			Node<T> dataNode = head;
+			Node<T> prevNode = null;
+			while (dataNode.getData() != data) {
+				//if youve hit the last item,
+				//and you havent found the data,
+				//throw exception
+				if (dataNode.getNext() == null) {
+					throw new NoSuchElementException("The data is not present in the list");
+				}
+				prevNode = dataNode;
+				dataNode = dataNode.getNext();
+			}
+			//at this point, you've found the node with the data
+			removedData = dataNode.getData();
+			//if the data point is the tail, set prev point as new tail
+			if (dataNode.getNext() == null) {
+				prevNode.setNext(null);
+				tail = prevNode;
+			}
+			//if data point is node (3)
+			else {
+				//set 2 next to 4
+				prevNode.setNext(dataNode.getNext());
+			}
+			size--;
+			return removedData;
+		}
+		//adjust for head, tail, size accordingly
+	}
+	public void clear() {
+		//clears LinkedList
+		//you can do this without iterating through LinkedList
+		head = null;
+	}
+	public boolean isEmpty() {
+		//returns boolean value if list is empty
+		return (head == null);
+	}
+	public int size() {
+		//returns current size of list
+		return size;
+	}
+}
